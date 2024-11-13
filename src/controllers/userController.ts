@@ -22,8 +22,8 @@ export const loginUser = async (req: Request, res: Response) => {
     try {
       const { user, token } = await loginUserService(userData);
   
-      res.setHeader("Authorization", `Bearer ${token}`);
-      
+      res.header("Authorization", `Bearer ${token}`);
+      res.header("Access-Control-Expose-Headers", "Authorization");
       res.status(200).json({ user });
     } catch (error) {
       res.status(400).json({ message: "User login failed", error: (error as Error).message });
