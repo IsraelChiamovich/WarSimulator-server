@@ -10,14 +10,9 @@ export const registerUserService = async (userData: RegisterDTO): Promise<IUser>
         throw new Error("User already exists");
     }
 
-    if (userData.region) {
-        const org = await Organization.findOne({ name: `${userData.organization}-${userData.region}` });
-    }
+    const orgName = userData.region ? `${userData.organization} - ${userData.region}` : userData.organization;
+    const org = await Organization.findOne({ name: orgName });
 
-    else {
-        const org = await Organization.findOne({ name: userData.organization });
-    }
-    
     if (!org) {
         throw new Error("Organization not found");
     }
@@ -25,7 +20,7 @@ export const registerUserService = async (userData: RegisterDTO): Promise<IUser>
     const userMissiles = org.resources.map(resource => ({
         name: resource.name,
         amount: resource.amount
-    }))
+    }));
     const userBudget = org.budget;
 
     return await User.create({
