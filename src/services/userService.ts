@@ -1,8 +1,10 @@
 // src/services/userService.ts
 
-import { RegisterDTO } from "../DTO/userDTO";
+import { RegisterDTO, LoginDTO } from "../DTO/userDTO";
 import Organization from "../models/organizationModel";
 import User, { IUser } from "../models/userModel";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const registerUserService = async (userData: RegisterDTO): Promise<IUser> => {
     const existingUser = await User.findOne({ username: userData.username });
@@ -31,4 +33,19 @@ export const registerUserService = async (userData: RegisterDTO): Promise<IUser>
         userMissiles,
         userBudget
     });
+};
+
+export const loginUserService = async (userData: LoginDTO): Promise<{ user: IUser, token: string }> => {
+    const user = await User.findOne({ username: userData.username });
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const isMatch = await bcrypt.compare(userData.password, user.password);
+    if (!isMatch) {
+        throw new Error("Invalid credentials");
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: "1h" });
+    return { user, token };
 };
