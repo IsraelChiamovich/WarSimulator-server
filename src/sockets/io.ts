@@ -2,9 +2,6 @@
 
 import { Socket } from "socket.io";
 import { io } from "../server";
-import { IAttack } from "../models/attackModel";
-import jwt from "jsonwebtoken";
-import { AttackCreationData } from "../DTO/attackDTO";
 import { createAttackService, updateAttackStatusService } from "../services/attackService";
 
 
