@@ -6,6 +6,7 @@ import cors from "cors";
 import { connectDB } from "./config/db";
 import userRouter from "./routes/userRouter"
 import organizationRouter from "./routes/organizationRouter"
+import attackRouter from "./routes/attackRouter"
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 connectDB();
 app.use("/api/users", userRouter);
 app.use("/api/organizations", organizationRouter);
+app.use("/api/attacks", attackRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

@@ -10,7 +10,8 @@ export default (req: Request, res: Response, next: NextFunction) => {
       res.status(401).json({ error: "Token must be provided" });
       return;
     }
-
+    console.log(token);
+    
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
     (req as any).user = payload;
 

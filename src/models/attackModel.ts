@@ -1,4 +1,4 @@
-// src/models/launchModel.ts
+// src/models/attackModel.ts
 
 import { model, Schema, Document, Model } from "mongoose";
 
@@ -6,16 +6,16 @@ export interface IAttack extends Document {
   name: string;
   timeToHit: number;
   regionAttacked: string;
-  id_attacker: string;
-  id_intercepted?: string;
+  attackerId: string;
+  interceptedId?: string;
 }
 
 const AttackSchema = new Schema<IAttack>({
   name: { type: String, required: true },
   timeToHit: { type: Number, required: true },
   regionAttacked: { type: String, required: true },
-  id_attacker: { type: String, required: true },
-  id_intercepted: { type: String },
+  attackerId: { type: String, required: true },
+  interceptedId: { type: String },
 });
 
 const Attack : Model<IAttack> = model<IAttack>("Attack", AttackSchema);
