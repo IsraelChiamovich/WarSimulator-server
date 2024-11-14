@@ -54,13 +54,28 @@ export const getAttacksByRegionServise = async (id: string) => {
   return attacks;
 };
 
-export const updateAttackStatusService = async (attackId: string, status: string) => {
-    const attack = await Attack.findById(attackId); // הסרת lean() כדי להחזיר מסמך Mongoose
+export const updateAttackStatusService = async (attackId: string, status: string, missileName?: string, interceptorId?: string) => {
+    const attack = await Attack.findById(attackId);
     if (!attack) throw new Error("Attack not found");
   
-    attack.status = status;
-    attack.timeToHit = 0;
-    await attack.save(); // שמירת השינוי
+    if (status === "Intercepted") {
+      if (!missileName || !interceptorId) throw new Error("Interceptor information missing");
+  
+      const missile = await Missile.findOne({ name: missileName });
+      if (!missile) throw new Error("Interceptor missile not found");
+  
+      if (!missile.intercepts || !missile.intercepts.includes(attack.name)) {
+        throw new Error("This missile is not capable of intercepting the attack");
+      }
+  
+      attack.status = "Intercepted";
+      attack.timeToHit = 0;
+      attack.interceptedId = interceptorId;
+    } else {
+      attack.status = status;
+      attack.timeToHit = 0;
+    }
+  
+    await attack.save();
     return attack;
   };
-  
